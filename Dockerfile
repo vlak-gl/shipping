@@ -2,11 +2,12 @@ FROM maven:3.2-jdk-8 AS builder
 WORKDIR /usr/src/mymaven
 COPY . /usr/src/mymaven
 RUN mvn -DskipTests package
+COPY target/*.jar /app.jar
 
 FROM weaveworksdemos/msd-java:jre-latest
 
 WORKDIR /usr/src/app
-COPY --from=builder target/*.jar ./app.jar
+COPY --from=builder /app.jar ./app.jar
 
 RUN	chown -R ${SERVICE_USER} ./app.jar
 
